@@ -37,6 +37,8 @@
   function csrfToken() {
     var meta = document.querySelector('meta[name="csrf-token"]');
     if (meta && meta.getAttribute("content")) return meta.getAttribute("content");
+    var s = Session.get();
+    if (s && s.csrf_token) return s.csrf_token;
     if (!global.__CSRF) global.__CSRF = "mock-" + Math.random().toString(36).slice(2, 12);
     return global.__CSRF;
   }

@@ -60,10 +60,18 @@ Promise.all([App.api('/api/dokter/appointments'), App.api('/api/dokter/profile')
     subtitle: hariIni.length ? 'Termasuk pasien yang belum dikonfirmasi.' : 'Tidak ada janji aktif hari ini.',
     padded: false,
     body: hariIni.length ? '<ul class="divide-y divide-slate-100">' + hariIni.map(function (a) {
+      var actionBtn = '';
+      if (a.status === 'pending') {
+        actionBtn = '<a href="' + url('dokter/janji.php') + '" class="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-700">Terima di Janji Temu</a>';
+      } else if (a.status === 'confirmed') {
+        actionBtn = '<a href="' + url('dokter/rekam-medis-baru.php?appointment_id=' + a.id) + '" class="rounded-lg bg-brand-700 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-800">Rekam medis</a>';
+      } else {
+        actionBtn = '<a href="' + url('dokter/rekam-medis.php') + '" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-medium hover:bg-slate-50">Lihat rekam medis</a>';
+      }
       return '<li class="flex flex-wrap items-center gap-3 p-4"><div class="w-16 shrink-0"><p class="text-sm font-semibold text-slate-900">' + App.fmt.jam(a.start_time) + '</p><p class="text-xs text-slate-500">' + App.fmt.jam(a.end_time) + '</p></div>' +
         '<div class="min-w-0 grow"><p class="text-sm font-medium text-slate-900">' + App.esc(a.patient_name) + '</p><p class="line-clamp-1 text-xs text-slate-500">' + App.esc(a.reason) + '</p></div>' +
         Render.badge(a.status) +
-        '<a href="' + url('dokter/rekam-medis-baru.php?appointment_id=' + a.id) + '" class="rounded-lg bg-brand-700 px-3 py-2 text-xs font-semibold text-white hover:bg-brand-800">Rekam medis</a></li>';
+        actionBtn + '</li>';
     }).join('') + '</ul>' : App.stateBox('empty', 'Tidak ada janji temu hari ini.')
   });
 

@@ -130,9 +130,11 @@ document.getElementById('rx-list').addEventListener('click', function (e) {
 
 paintRx();
 App.api('/api/dokter/appointments').then(function (res) {
-  var opts = res.data.filter(function (a) { return ['confirmed','completed'].indexOf(a.status) > -1; });
-  var sel = document.getElementById('appointment_id');
   var pre = qs('appointment_id');
+  var opts = res.data.filter(function (a) { 
+    return ['confirmed','completed'].indexOf(a.status) > -1 || (pre && String(a.id) === String(pre)); 
+  });
+  var sel = document.getElementById('appointment_id');
   sel.innerHTML = '<option value="">Pilih janji temu…</option>' + opts.map(function (a) {
     return '<option value="' + a.id + '" data-patient="' + App.esc(a.patient_name) + '"' + (String(a.id) === String(pre) ? ' selected' : '') + '>' +
       App.esc(a.code) + ' · ' + App.esc(a.patient_name) + ' · ' + App.fmt.tanggal(a.date) + ' ' + App.fmt.jam(a.start_time) + '</option>';

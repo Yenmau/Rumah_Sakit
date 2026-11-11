@@ -1,0 +1,10 @@
+# Logs & Storage
+backend/storage/*.log
+backend/storage/*.sqlite
+!backend/storage/.gitkeep
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
